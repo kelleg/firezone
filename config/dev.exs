@@ -1,11 +1,8 @@
 import Config
 
 config :fz_http, FzHttp.Repo,
-  database: System.get_env("DATABASE_NAME", "firezone_dev"),
-  username: System.get_env("DATABASE_USER", "postgres"),
-  hostname: System.get_env("DATABASE_HOST", "localhost"),
-  port: String.to_integer(System.get_env("DATABASE_PORT", "5432")),
-  password: System.get_env("DATABASE_PASSWORD", "postgres")
+  database: System.get_env("DATABASE_PATH", "/app/firezone_dev.db"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5")
 
 config :fz_http, FzHttpWeb.Endpoint,
   http: [port: 13000],

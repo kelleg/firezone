@@ -8,7 +8,7 @@ ARG RUNNER_IMAGE="alpine:${ALPINE_VERSION}"
 FROM ${BUILDER_IMAGE} as builder
 
 # install build dependencies
-RUN apk add nodejs yarn build-base git python3
+RUN apk add nodejs yarn build-base git python3 sqlite-dev
 
 # prepare build dir
 WORKDIR /app
@@ -21,7 +21,7 @@ RUN mix local.hex --force && \
 ENV MIX_ENV="prod"
 
 # install mix dependencies
-COPY mix.exs mix.lock ./
+COPY mix.exs ./
 COPY apps/fz_http/mix.exs ./apps/fz_http/mix.exs
 COPY apps/fz_vpn/mix.exs ./apps/fz_vpn/mix.exs
 COPY apps/fz_wall/mix.exs ./apps/fz_wall/mix.exs
@@ -62,7 +62,7 @@ RUN mix release
 # the compiled release and other runtime necessities
 FROM ${RUNNER_IMAGE}
 
-RUN apk add -u --no-cache nftables libstdc++ ncurses-libs openssl
+RUN apk add -u --no-cache nftables libstdc++ ncurses-libs openssl sqlite && mkdir -p /app/db
 
 WORKDIR /app
 

@@ -14,15 +14,8 @@ config :fz_http, ecto_repos: [FzHttp.Repo]
 config :fz_http, sql_sandbox: false
 
 config :fz_http, FzHttp.Repo,
-  hostname: "localhost",
-  username: "postgres",
-  password: "postgres",
-  database: "firezone_dev",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: :erlang.system_info(:logical_processors_available) * 2,
-  queue_target: 500,
-  queue_interval: 1000,
-  migration_timestamps: [type: :timestamptz]
+  database: System.get_env("DATABASE_PATH", "/app/db/firezone.db"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
 config :fz_http,
   external_url: "http://localhost:13000/",

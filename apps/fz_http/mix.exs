@@ -61,9 +61,9 @@ defmodule FzHttp.MixProject do
       {:file_size, "~> 3.0.1"},
 
       # Ecto-related deps
-      {:postgrex, "~> 0.16"},
       {:decimal, "~> 2.0"},
       {:ecto_sql, "~> 3.7"},
+      {:ecto_sqlite3, ">= 0.0.0"},
       {:cloak, "~> 1.1"},
       {:cloak_ecto, "~> 1.2"},
 

@@ -4,15 +4,8 @@ if config_env() == :prod do
   import FzHttp.Config, only: [compile_config!: 1]
 
   config :fz_http, FzHttp.Repo,
-    database: compile_config!(:database_name),
-    username: compile_config!(:database_user),
-    hostname: compile_config!(:database_host),
-    port: compile_config!(:database_port),
-    password: compile_config!(:database_password),
-    pool_size: compile_config!(:database_pool_size),
-    ssl: compile_config!(:database_ssl_enabled),
-    ssl_opts: compile_config!(:database_ssl_opts),
-    parameters: compile_config!(:database_parameters)
+    database: System.get_env("DATABASE_PATH", "/app/firezone.db"),
+    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5")
 
   external_url = compile_config!(:external_url)
 

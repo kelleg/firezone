@@ -17,27 +17,6 @@ x-deploy: &default-deploy
 version: '3.7'
 
 services:
-  caddy:
-    image: caddy:2
-    volumes:
-      - ${FZ_INSTALL_DIR:-.}/caddy:/data/caddy
-    # See Caddy's documentation for customizing this line
-    # https://caddyserver.com/docs/quick-starts/reverse-proxy
-    command:
-      - /bin/sh
-      - -c
-      - |
-        cat <<EOF > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile
-
-        ${EXTERNAL_URL} {
-          log
-          reverse_proxy * 172.25.0.100:${PHOENIX_PORT:-13000}
-        }
-        EOF
-    network_mode: "host"
-    deploy:
-      <<: *default-deploy
-
   firezone:
     image: firezone/firezone:${VERSION:-latest}
     ports:
@@ -60,8 +39,6 @@ services:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv4.ip_forward=1
       - net.ipv6.conf.all.forwarding=1
-    depends_on:
-      - postgres
     networks:
       firezone-network:
         ipv4_address: 172.25.0.100
@@ -69,25 +46,6 @@ services:
 
     deploy:
       <<: *default-deploy
-
-  postgres:
-    image: postgres:15
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: ${DATABASE_NAME:-firezone}
-      POSTGRES_USER: ${DATABASE_USER:-postgres}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?err}
-    networks:
-      - firezone-network
-    deploy:
-      <<: *default-deploy
-      update_config:
-        order: stop-first
-
-# Postgres needs a named volume to prevent perms issues on non-linux platforms
-volumes:
-  postgres-data:
 
 networks:
   firezone-network:

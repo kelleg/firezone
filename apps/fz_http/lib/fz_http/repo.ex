@@ -1,7 +1,7 @@
 defmodule FzHttp.Repo do
   use Ecto.Repo,
     otp_app: :fz_http,
-    adapter: Ecto.Adapters.Postgres
+    adapter: Ecto.Adapters.SQLite3
 
   @doc """
   Similar to `Ecto.Repo.one/2`, fetches a single result from the query.
